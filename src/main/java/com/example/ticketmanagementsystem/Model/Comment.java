@@ -1,0 +1,38 @@
+package com.example.ticketmanagementsystem.Model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor
+public class Comment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Ticket ticket;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Auth user;
+
+    @NotBlank(message = "Comment can't be empty")
+    @Length(max = 1000, message = "Comment can't be more than 1000 characters")
+    @Column(columnDefinition = "varchar(1000) not null")
+    private String comment;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created_at;
+}
