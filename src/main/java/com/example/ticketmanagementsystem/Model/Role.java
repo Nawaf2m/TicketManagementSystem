@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,7 +27,7 @@ public class Role {
     @Column(length = 20, nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     @JsonIgnore
-    private Set<Auth> auths = new HashSet<>();
+    private List<Auth> auths = new ArrayList<>();
 }
