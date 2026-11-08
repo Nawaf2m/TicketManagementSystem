@@ -21,8 +21,6 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "Name can't be empty")
-    @Length(min = 2, max = 30, message = "Name length must be between 2 and 20 characters")
     @Column(columnDefinition = "varchar(30) not null", unique = true)
     private String name;
 
