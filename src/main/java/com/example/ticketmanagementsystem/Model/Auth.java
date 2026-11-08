@@ -24,25 +24,24 @@ public class Auth {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "Name can't be empty")
-    @Length(min = 2, max = 20, message = "Name length must be between 2 and 20 characters")
     @Column(columnDefinition = "varchar(20) not null")
     private String name;
 
-    @NotEmpty(message = "Email can't be empty")
-    @Email(message = "Email must be in the right format")
     @Column(columnDefinition = "varchar(50) not null", unique = true)
     private String email;
 
     @Column(columnDefinition = "varchar(100) not null")
     private String password;
 
-    @ManyToMany
-    @JoinTable
-    @JsonIgnore
-    private Set<Role> roles = new HashSet<>();
+    @Column(nullable = false)
+    private boolean active = true;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
+    private Role role;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private Department department;
 
     @OneToMany(mappedBy = "created_by")
