@@ -44,11 +44,11 @@ public class Auth {
     @JoinColumn(nullable = false)
     private Department department;
 
-    @OneToMany(mappedBy = "created_by")
+    @OneToMany(mappedBy = "createdBy")
     @JsonIgnore
     private List<Ticket> createdTickets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "assigned_to")
+    @OneToMany(mappedBy = "assignedTo")
     @JsonIgnore
     private List<Ticket> assignedTickets = new ArrayList<>();
 

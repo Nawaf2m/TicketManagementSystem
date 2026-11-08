@@ -41,5 +41,5 @@ public class TicketActivity {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

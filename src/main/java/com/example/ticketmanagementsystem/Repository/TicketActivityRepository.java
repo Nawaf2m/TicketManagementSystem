@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface TicketActivityRepository extends JpaRepository<TicketActivity, Integer> {
     TicketActivity findTicketActivityById(Integer id);
-    
-    List<TicketActivity> findAllByTicket_IdOrderByCreated_atAsc(Integer ticketId);
+
+    List<TicketActivity> findAllByTicket_IdOrderByCreatedAtAsc(Integer ticketId);
 }
