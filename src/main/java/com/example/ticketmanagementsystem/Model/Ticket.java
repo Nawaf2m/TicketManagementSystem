@@ -46,17 +46,17 @@ public class Ticket {
 
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updated_at;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Auth created_by;
+    private Auth createdBy;
 
     @ManyToOne
-    private Auth assigned_to;
+    private Auth assignedTo;
 
     @OneToMany(mappedBy = "ticket")
     @JsonIgnore
