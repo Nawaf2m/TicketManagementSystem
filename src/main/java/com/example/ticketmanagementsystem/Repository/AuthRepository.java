@@ -17,4 +17,6 @@ public interface AuthRepository extends JpaRepository<Auth, Integer> {
     long countByRole_Name(String roleName);
 
     long countByRole_NameAndActiveTrue(String roleName);
+
+    boolean existsByDepartment_Id(Integer departmentId);
 }
