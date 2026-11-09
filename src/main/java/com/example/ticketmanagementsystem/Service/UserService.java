@@ -33,9 +33,7 @@ public class UserService {
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive()
-                || currentUser.getRole() == null
-                || !currentUser.getRole().getName().equals("ADMIN")) {
+        if (!currentUser.isActive() || currentUser.getRole() == null || !currentUser.getRole().getName().equals("ADMIN")) {
 
             throw new ApiException("You are not allowed to access this endpoint");
         }

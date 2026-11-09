@@ -49,7 +49,15 @@ public class Ticket {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updated_at;
+    @Column
+    private LocalDateTime updatedAt;
+
+    @Column(name = "closed_at")
+    private LocalDateTime closedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "closed_by_id")
+    private Auth closedBy;
 
     @ManyToOne
     @JoinColumn(nullable = false)
