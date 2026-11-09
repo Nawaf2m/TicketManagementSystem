@@ -33,11 +33,11 @@ public class TicketActivity {
     private Auth user;
 
     @Column(columnDefinition = "varchar(100)")
-    private String old_value;
+    private String oldValue;
 
     @NotEmpty(message = "New_value can't be empty")
     @Column(columnDefinition = "varchar(100) not null")
-    private String new_value;
+    private String newValue;
 
     @CreationTimestamp
     @Column(updatable = false)
