@@ -60,7 +60,7 @@ public class Auth {
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "uploaded_by")
+    @OneToMany(mappedBy = "uploadedBy")
     @JsonIgnore
     private List<Attachment> attachments = new ArrayList<>();
 }
