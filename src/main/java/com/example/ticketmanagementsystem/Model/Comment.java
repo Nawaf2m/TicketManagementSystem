@@ -27,8 +27,6 @@ public class Comment {
     @JoinColumn(nullable = false)
     private Auth user;
 
-    @NotBlank(message = "Comment can't be empty")
-    @Length(max = 1000, message = "Comment can't be more than 1000 characters")
     @Column(columnDefinition = "varchar(1000) not null")
     private String comment;
 
