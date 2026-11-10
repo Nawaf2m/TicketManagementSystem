@@ -25,19 +25,19 @@ public class Attachment {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Auth uploaded_by;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime created_at;
+    private Auth uploadedBy;
 
     @NotBlank(message = "File name can't be empty")
     @Length(max = 255, message = "File name can't be more than 255 characters")
     @Column(length = 255, nullable = false)
-    private String file_name;
+    private String fileName;
 
     @NotBlank(message = "File path can't be empty")
     @Length(max = 300, message = "File path can't be more than 300 characters")
     @Column(length = 300, nullable = false)
-    private String file_path;
+    private String filePath;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }
