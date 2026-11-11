@@ -1,18 +1,14 @@
 package com.example.ticketmanagementsystem.Repository;
 
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-
 @Repository
-public interface AuthRepository extends JpaRepository<Auth, Integer> {
-    Auth findAuthById(Integer id);
+public interface AuthRepository extends JpaRepository<User, Integer> {
+    User findUserById(Integer id);
 
-    Auth findAuthByEmail(String email);
-
-    Auth getAuthById(Integer id);
+    User findUserByEmail(String email);
 
     long countByRole_Name(String roleName);
 

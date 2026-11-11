@@ -3,7 +3,7 @@ package com.example.ticketmanagementsystem.Service;
 import com.example.ticketmanagementsystem.Api.ApiException;
 import com.example.ticketmanagementsystem.DtoIn.CreateTicketDTO;
 import com.example.ticketmanagementsystem.DtoOut.TicketResponseDTO;
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Model.Ticket;
 import com.example.ticketmanagementsystem.Repository.AuthRepository;
 import com.example.ticketmanagementsystem.Repository.TicketRepository;
@@ -24,7 +24,7 @@ public class TicketService {
 
     public List<TicketResponseDTO> getAllTickets(Integer currentUserId) {
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -69,7 +69,7 @@ public class TicketService {
 
     public void addTicket(Integer currentUserId, CreateTicketDTO ticketDTO) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -92,7 +92,7 @@ public class TicketService {
 
     public List<TicketResponseDTO> getMyTickets(Integer currentUserId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -137,7 +137,7 @@ public class TicketService {
 
     public TicketResponseDTO getTicketById(Integer currentUserId, Integer ticketId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -196,7 +196,7 @@ public class TicketService {
     @Transactional
     public void assignTicket(Integer currentUserId, Integer ticketId, Integer agentId) {
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -213,7 +213,7 @@ public class TicketService {
             throw new ApiException("Ticket not found.");
         }
 
-        Auth agent = authRepository.findAuthById(agentId);
+        User agent = authRepository.findUserById(agentId);
 
         //check if agent account exist.
         if (agent == null){
@@ -254,7 +254,7 @@ public class TicketService {
     @Transactional
     public void advanceTicketStatus(Integer currentUserId, Integer ticketId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -312,7 +312,7 @@ public class TicketService {
     @Transactional
     public void updateTicketPriority(Integer currentUserId, Integer ticketId, String newPriority) {
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -354,7 +354,7 @@ public class TicketService {
 
     public List<TicketResponseDTO> getAssignedTickets(Integer currentUserId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");

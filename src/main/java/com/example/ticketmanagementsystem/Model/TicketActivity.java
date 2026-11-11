@@ -30,7 +30,7 @@ public class TicketActivity {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Auth user;
+    private User user;
 
     @Column(columnDefinition = "varchar(100)")
     private String oldValue;

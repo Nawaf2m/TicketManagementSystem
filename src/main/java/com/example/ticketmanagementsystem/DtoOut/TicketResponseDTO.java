@@ -1,6 +1,5 @@
 package com.example.ticketmanagementsystem.DtoOut;
 
-import com.example.ticketmanagementsystem.Model.Auth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

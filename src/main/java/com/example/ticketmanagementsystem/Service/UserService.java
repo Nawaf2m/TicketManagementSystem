@@ -5,7 +5,7 @@ import com.example.ticketmanagementsystem.DtoIn.CreateUserDTO;
 import com.example.ticketmanagementsystem.DtoIn.UpdateUserDTO;
 import com.example.ticketmanagementsystem.DtoIn.UpdateUserRoleDTO;
 import com.example.ticketmanagementsystem.DtoOut.UserResponseDTO;
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Model.Department;
 import com.example.ticketmanagementsystem.Model.Role;
 import com.example.ticketmanagementsystem.Repository.AuthRepository;
@@ -25,9 +25,51 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final DepartmentRepository departmentRepository;
 
+    public void initializeAdmin(CreateUserDTO newUser){
+        //check if email already used.
+        if (authRepository.findUserByEmail(newUser.getEmail()) != null) {
+            throw new ApiException("Email already exists");
+        }
+
+        //if role admin not exist then create it.
+        Role adminRole = roleRepository.findRoleByName("ADMIN");
+
+        if (adminRole == null){
+            adminRole = new Role();
+            adminRole.setName("ADMIN");
+            roleRepository.save(adminRole);
+        }
+
+        //if there is at least one admin the system then this method no one can use it to create an admin.
+        if (authRepository.countByRole_Name("ADMIN") >= 1){
+            throw new ApiException("There is already admin in the system.");
+        }
+
+        Department departmentIT = departmentRepository.findDepartmentByName("IT");
+
+        //if IT department not exist then create it.
+        if (departmentIT == null){
+            departmentIT = new Department();
+            departmentIT.setName("IT");
+            departmentRepository.save(departmentIT);
+        }
+
+        User admin = new User();
+
+        admin.setName(newUser.getName());
+        admin.setEmail(newUser.getEmail());
+        String hash = new BCryptPasswordEncoder().encode(newUser.getPassword());
+        admin.setPassword(hash);
+        admin.setDepartment(departmentIT);
+        admin.setRole(adminRole);
+        admin.setActive(true);
+
+        authRepository.save(admin);
+    }
+
     public List<UserResponseDTO> getAllUsers(Integer currentUserId){
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -38,7 +80,7 @@ public class UserService {
             throw new ApiException("You are not allowed to access this endpoint");
         }
 
-        List<Auth> users = authRepository.findAll();
+        List<User> users = authRepository.findAll();
 
         if (users.isEmpty()){
             throw new ApiException("The list is empty");
@@ -57,7 +99,7 @@ public class UserService {
 
     public void addUser(Integer currentUserId, CreateUserDTO newUser){
         //Check if the user who accesses this endpoint is exist and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -71,7 +113,7 @@ public class UserService {
         }
 
         //check if the email have been used by another user or not.
-        Auth checkUserEmailExist = authRepository.findAuthByEmail(newUser.getEmail());
+        User checkUserEmailExist = authRepository.findUserByEmail(newUser.getEmail());
 
         if (checkUserEmailExist != null){
             throw new ApiException("Email already have been used.");
@@ -94,7 +136,7 @@ public class UserService {
         //After we have checked that the one who is add a new user is the admin and the email
         //have not been used by another user and we have checked that the role and the department exist
         //now we can add the user to our system safely.
-        Auth createNewUser = new Auth();
+        User createNewUser = new User();
 
         createNewUser.setName(newUser.getName());
         createNewUser.setEmail(newUser.getEmail());
@@ -108,7 +150,7 @@ public class UserService {
 
     public void updateUser(Integer currentUserId, Integer targetUserId, UpdateUserDTO updateUser){
         //Check if the user who accesses this endpoint is exist and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -122,7 +164,7 @@ public class UserService {
         }
 
         //check if user to update is exist.
-        Auth userToUpdate = authRepository.findAuthById(targetUserId);
+        User userToUpdate = authRepository.findUserById(targetUserId);
 
         if (userToUpdate == null){
             throw new ApiException("Wrong target user id.");
@@ -135,7 +177,7 @@ public class UserService {
             throw new ApiException("Department not exist");
         }
 
-        Auth emailOwner = authRepository.findAuthByEmail(updateUser.getEmail());
+        User emailOwner = authRepository.findUserByEmail(updateUser.getEmail());
 
         if (emailOwner != null && !emailOwner.getId().equals(targetUserId)) {
             throw new ApiException("Email already used by another user");
@@ -153,7 +195,7 @@ public class UserService {
 
     public void updateUserRole(Integer currentUserId, Integer targetUserId, UpdateUserRoleDTO newRole){
         //Check if the user who accesses this endpoint is exist and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -167,7 +209,7 @@ public class UserService {
         }
 
         //check if user to update is exist.
-        Auth userToUpdate = authRepository.findAuthById(targetUserId);
+        User userToUpdate = authRepository.findUserById(targetUserId);
 
         if (userToUpdate == null){
             throw new ApiException("Wrong target user id.");
@@ -194,7 +236,7 @@ public class UserService {
 
     public UserResponseDTO getUserById(Integer currentUserId, Integer targetUserId){
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -207,7 +249,7 @@ public class UserService {
             throw new ApiException("You are not allowed to access this endpoint");
         }
 
-        Auth targetUser = authRepository.findAuthById(targetUserId);
+        User targetUser = authRepository.findUserById(targetUserId);
 
         if (targetUser == null){
             throw new ApiException("User not found");
@@ -219,7 +261,7 @@ public class UserService {
 
     public void deactivateUser(Integer currentUserId, Integer targetUserId){
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -232,7 +274,7 @@ public class UserService {
             throw new ApiException("You are not allowed to access this endpoint");
         }
 
-        Auth targetUser = authRepository.findAuthById(targetUserId);
+        User targetUser = authRepository.findUserById(targetUserId);
 
         if (targetUser == null){
             throw new ApiException("User not found");
@@ -255,7 +297,7 @@ public class UserService {
 
     public void activateUser(Integer currentUserId, Integer targetUserId){
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -268,7 +310,7 @@ public class UserService {
             throw new ApiException("You are not allowed to access this endpoint");
         }
 
-        Auth targetUser = authRepository.findAuthById(targetUserId);
+        User targetUser = authRepository.findUserById(targetUserId);
 
         if (targetUser == null){
             throw new ApiException("User not found");

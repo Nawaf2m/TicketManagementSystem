@@ -3,7 +3,7 @@ package com.example.ticketmanagementsystem.Service;
 import com.example.ticketmanagementsystem.Api.ApiException;
 import com.example.ticketmanagementsystem.DtoIn.DepartmentDTO;
 import com.example.ticketmanagementsystem.DtoOut.DepartmentResponseDTO;
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Model.Department;
 import com.example.ticketmanagementsystem.Repository.AuthRepository;
 import com.example.ticketmanagementsystem.Repository.DepartmentRepository;
@@ -36,7 +36,7 @@ public class DepartmentService {
 
     public void addDepartment(Integer currentUserId, DepartmentDTO departmentToAdd){
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -64,7 +64,7 @@ public class DepartmentService {
 
     public void updateDepartment(Integer currentUserId, Integer departmentId, DepartmentDTO departmentDTO) {
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
@@ -108,7 +108,7 @@ public class DepartmentService {
 
     public void deleteDepartment(Integer currentUserId, Integer departmentId) {
         //Check if the user who accesses this endpoint is existed and his role is admin.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");

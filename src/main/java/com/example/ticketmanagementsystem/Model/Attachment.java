@@ -25,7 +25,7 @@ public class Attachment {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Auth uploadedBy;
+    private User uploadedBy;
 
     @NotBlank(message = "File name can't be empty")
     @Length(max = 255, message = "File name can't be more than 255 characters")

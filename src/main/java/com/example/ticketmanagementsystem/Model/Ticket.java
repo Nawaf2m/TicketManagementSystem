@@ -57,14 +57,14 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "closed_by_id")
-    private Auth closedBy;
+    private User closedBy;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Auth createdBy;
+    private User createdBy;
 
     @ManyToOne
-    private Auth assignedTo;
+    private User assignedTo;
 
     @OneToMany(mappedBy = "ticket")
     @JsonIgnore
