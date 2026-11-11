@@ -1,6 +1,6 @@
 package com.example.ticketmanagementsystem.Service;
 
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Model.Ticket;
 import com.example.ticketmanagementsystem.Model.TicketActivity;
 import com.example.ticketmanagementsystem.Repository.TicketActivityRepository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class TicketActivityService {
     private final TicketActivityRepository ticketActivityRepository;
 
-    public void logActivity(Ticket ticket, Auth user, String action, String oldValue, String newValue) {
+    public void logActivity(Ticket ticket, User user, String action, String oldValue, String newValue) {
 
         TicketActivity activity = new TicketActivity();
         activity.setTicket(ticket);

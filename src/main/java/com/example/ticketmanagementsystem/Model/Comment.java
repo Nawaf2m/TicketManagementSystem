@@ -1,12 +1,10 @@
 package com.example.ticketmanagementsystem.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +23,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Auth user;
+    private User user;
 
     @Column(columnDefinition = "varchar(1000) not null")
     private String comment;

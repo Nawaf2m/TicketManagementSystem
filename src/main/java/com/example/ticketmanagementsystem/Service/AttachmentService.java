@@ -3,7 +3,7 @@ package com.example.ticketmanagementsystem.Service;
 import com.example.ticketmanagementsystem.Api.ApiException;
 import com.example.ticketmanagementsystem.DtoOut.AttachmentResponseDTO;
 import com.example.ticketmanagementsystem.Model.Attachment;
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Model.Ticket;
 import com.example.ticketmanagementsystem.Repository.AttachmentRepository;
 import com.example.ticketmanagementsystem.Repository.AuthRepository;
@@ -19,13 +19,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
 @AllArgsConstructor
@@ -36,7 +32,7 @@ public class AttachmentService {
 
     public void uploadAttachment(Integer currentUserId, Integer ticketId, MultipartFile file) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){
@@ -206,7 +202,7 @@ public class AttachmentService {
 
     public List<AttachmentResponseDTO> getTicketAttachments(Integer currentUserId, Integer ticketId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){
@@ -262,7 +258,7 @@ public class AttachmentService {
 
     public AttachmentResponseDTO getAttachmentById(Integer currentUserId, Integer attachmentId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){
@@ -304,7 +300,7 @@ public class AttachmentService {
 
     public Resource downloadAttachment(Integer currentUserId, Integer attachmentId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){

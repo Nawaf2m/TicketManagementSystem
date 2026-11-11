@@ -4,10 +4,12 @@ import com.example.ticketmanagementsystem.Api.ApiResponse;
 import com.example.ticketmanagementsystem.DtoIn.DepartmentDTO;
 import com.example.ticketmanagementsystem.DtoOut.DepartmentResponseDTO;
 import com.example.ticketmanagementsystem.Model.Department;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Service.DepartmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,21 +23,21 @@ public class DepartmentController {
         return ResponseEntity.status(200).body(departmentService.getAllDepartments());
     }
 
-    @PostMapping("/add/{currentUserId}")
-    public ResponseEntity<?> addDepartment(@PathVariable Integer currentUserId,@RequestBody @Valid DepartmentDTO departmentToAdd){
-        departmentService.addDepartment(currentUserId, departmentToAdd);
+    @PostMapping("/add")
+    public ResponseEntity<?> addDepartment(@AuthenticationPrincipal User user, @RequestBody @Valid DepartmentDTO departmentToAdd){
+        departmentService.addDepartment(user.getId(), departmentToAdd);
         return ResponseEntity.status(200).body(new ApiResponse("Department added successfully"));
     }
 
-    @PutMapping("/update/{currentUserId}/{departmentId}")
-    public ResponseEntity<?> updateDepartment(@PathVariable Integer currentUserId, @PathVariable Integer departmentId, @RequestBody @Valid DepartmentDTO departmentDTO){
-        departmentService.updateDepartment(currentUserId, departmentId, departmentDTO);
+    @PutMapping("/update/{departmentId}")
+    public ResponseEntity<?> updateDepartment(@AuthenticationPrincipal User user, @PathVariable Integer departmentId, @RequestBody @Valid DepartmentDTO departmentDTO){
+        departmentService.updateDepartment(user.getId(), departmentId, departmentDTO);
         return ResponseEntity.status(200).body(new ApiResponse("Department updated successfully"));
     }
 
-    @DeleteMapping("/delete/{currentUserId}/{departmentId}")
-    public ResponseEntity<?> deleteDepartment(@PathVariable Integer currentUserId, @PathVariable Integer departmentId){
-        departmentService.deleteDepartment(currentUserId,departmentId);
+    @DeleteMapping("/delete/{departmentId}")
+    public ResponseEntity<?> deleteDepartment(@AuthenticationPrincipal User user, @PathVariable Integer departmentId){
+        departmentService.deleteDepartment(user.getId(),departmentId);
         return ResponseEntity.status(200).body(new ApiResponse("Department deleted successfully"));
     }
 

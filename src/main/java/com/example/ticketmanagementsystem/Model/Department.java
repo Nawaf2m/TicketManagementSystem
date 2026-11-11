@@ -2,15 +2,12 @@ package com.example.ticketmanagementsystem.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,5 +23,5 @@ public class Department {
 
     @OneToMany(mappedBy = "department")
     @JsonIgnore
-    private List<Auth> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 }

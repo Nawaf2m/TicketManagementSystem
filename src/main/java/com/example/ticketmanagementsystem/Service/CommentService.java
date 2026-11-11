@@ -3,12 +3,11 @@ package com.example.ticketmanagementsystem.Service;
 import com.example.ticketmanagementsystem.Api.ApiException;
 import com.example.ticketmanagementsystem.DtoIn.CreateCommentDTO;
 import com.example.ticketmanagementsystem.DtoOut.CommentResponseDTO;
-import com.example.ticketmanagementsystem.Model.Auth;
+import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Model.Comment;
 import com.example.ticketmanagementsystem.Model.Ticket;
 import com.example.ticketmanagementsystem.Repository.AuthRepository;
 import com.example.ticketmanagementsystem.Repository.CommentRepository;
-import com.example.ticketmanagementsystem.Repository.TicketActivityRepository;
 import com.example.ticketmanagementsystem.Repository.TicketRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class CommentService {
 
     public void addComment(Integer currentUserId, Integer ticketId, CreateCommentDTO commentDTO) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){
@@ -73,7 +72,7 @@ public class CommentService {
 
     public List<CommentResponseDTO> getTicketComments(Integer currentUserId, Integer ticketId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){
@@ -125,7 +124,7 @@ public class CommentService {
 
     public CommentResponseDTO getCommentById(Integer currentUserId, Integer commentId) {
         // Check if the current user exists and is active.
-        Auth currentUser = authRepository.findAuthById(currentUserId);
+        User currentUser = authRepository.findUserById(currentUserId);
 
         //Check if user exist.
         if (currentUser == null){
