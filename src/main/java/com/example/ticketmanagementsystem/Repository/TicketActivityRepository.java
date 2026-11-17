@@ -11,4 +11,8 @@ public interface TicketActivityRepository extends JpaRepository<TicketActivity, 
     TicketActivity findTicketActivityById(Integer id);
 
     List<TicketActivity> findAllByTicket_IdOrderByCreatedAtAsc(Integer ticketId);
+
+    List<TicketActivity> findByTicketIdOrderByCreatedAtDesc(Integer ticketId);
+
+    List<TicketActivity> findTop10ByOrderByCreatedAtDesc();
 }

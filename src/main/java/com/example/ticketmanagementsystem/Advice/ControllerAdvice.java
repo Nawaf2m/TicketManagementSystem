@@ -3,6 +3,7 @@ package com.example.ticketmanagementsystem.Advice;
 import com.example.ticketmanagementsystem.Api.ApiException;
 import com.example.ticketmanagementsystem.Api.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +13,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
+@Slf4j
 public class ControllerAdvice {
     // Our Exception
     @ExceptionHandler(value = ApiException.class)
@@ -40,20 +42,22 @@ public class ControllerAdvice {
     // SQL Constraint Ex:(Duplicate) Exception
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<ApiResponse> SQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
-        return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
+        log.error("Database constraint violation", e);
+        return ResponseEntity.status(400).body(new ApiResponse("The operation conflicts with existing data."));
     }
 
     // wrong write SQL in @column Exception
     @ExceptionHandler(value = InvalidDataAccessResourceUsageException.class)
     public ResponseEntity<ApiResponse> InvalidDataAccessResourceUsageException(InvalidDataAccessResourceUsageException e) {
-        return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
+        log.error("Database resource usage error", e);
+        return ResponseEntity.status(500).body(new ApiResponse("Unable to complete the operation. Please try again later."));
     }
 
     // Database Constraint Exception
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public ResponseEntity<ApiResponse> DataIntegrityViolationException(DataIntegrityViolationException e) {
-
-        return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
+        log.error("Data integrity violation", e);
+        return ResponseEntity.status(400).body(new ApiResponse("The operation conflicts with existing data."));
     }
 
     // Method not allowed Exception
@@ -76,9 +80,18 @@ public class ControllerAdvice {
         return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(value = ResponseStatusException.class)
+    public ResponseEntity<ApiResponse> ResponseStatusException(ResponseStatusException e) {
+
+        return ResponseEntity.status(e.getStatusCode())
+                .body(new ApiResponse(e.getReason() != null
+                        ? e.getReason()
+                        : "Request failed"));
+    }
+
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<ApiResponse> RuntimeException(RuntimeException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
+        log.error("Unexpected server error", e);
+        return ResponseEntity.status(500).body(new ApiResponse("An unexpected error occurred. Please try again later."));
     }
 }

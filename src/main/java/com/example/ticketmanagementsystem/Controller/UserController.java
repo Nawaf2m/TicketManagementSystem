@@ -5,6 +5,7 @@ import com.example.ticketmanagementsystem.Api.ApiResponse;
 import com.example.ticketmanagementsystem.DtoIn.CreateUserDTO;
 import com.example.ticketmanagementsystem.DtoIn.UpdateUserDTO;
 import com.example.ticketmanagementsystem.DtoIn.UpdateUserRoleDTO;
+import com.example.ticketmanagementsystem.DtoOut.UserResponseDTO;
 import com.example.ticketmanagementsystem.Model.User;
 import com.example.ticketmanagementsystem.Service.UserService;
 import jakarta.validation.Valid;
@@ -23,6 +24,11 @@ public class UserController {
 
     @Value("${app.admin.setup-key}")
     private String adminSetupKey;
+
+    @GetMapping("/me")
+    public UserResponseDTO getCurrentUser(@AuthenticationPrincipal User user) {
+        return userService.getCurrentUser(user.getId());
+    }
 
     @PostMapping("/initialize-admin")
     public ResponseEntity<?> initializeAdmin(@RequestHeader("X-Setup-Key") String setupKey, @RequestBody @Valid CreateUserDTO newUser) {

@@ -19,4 +19,6 @@ public class UserResponseDTO {
     private String departmentName;
 
     private String roleName;
+
+    private Boolean active;
 }
