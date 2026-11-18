@@ -1,24 +1,26 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Building2, LayoutDashboard, LogOut, Menu, Search, Ticket, Users, X } from 'lucide-react'
+import { Building2, LayoutDashboard, LogOut, Menu, Search, Shield, Ticket, Users, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { getName } from '../utils/data'
+import { Notice } from '../components/UI'
+import { departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from '../utils/permissions'
 
-const commonItems = [{ href: '/dashboard', icon: LayoutDashboard, title: 'Dashboard' }, { href: '/tickets', icon: Ticket, title: 'Tickets' }]
+const commonItems = [{ href: '/dashboard', icon: LayoutDashboard, title: 'Dashboard' }]
 
 export default function AppLayout() {
-  const { user, role, signOut } = useAuth()
+  const { user, role, signOut, hasAnyPermission, permissionsAvailable } = useAuth()
   const [mobileNav, setMobileNav] = useState(false)
   const [search, setSearch] = useState('')
   const navigate = useNavigate()
+  const canBrowseTickets = hasAnyPermission(...ticketListPermissions, 'TICKET_CREATE')
   const navItems = [
-  ...commonItems,
-
-  ...(role === 'ADMIN' ? [
-    { href: '/departments', icon: Building2, title: 'Departments' },
-    { href: '/users', icon: Users, title: 'Users' }
-  ] : [])
-]
+    ...commonItems,
+    ...(canBrowseTickets ? [{ href: '/tickets', icon: Ticket, title: 'Tickets' }] : []),
+    ...(hasAnyPermission(...departmentPagePermissions) ? [{ href: '/departments', icon: Building2, title: 'Departments' }] : []),
+    ...(hasAnyPermission(...userPagePermissions) ? [{ href: '/users', icon: Users, title: 'Users' }] : []),
+    ...(hasAnyPermission(...rolePagePermissions) ? [{ href: '/roles', icon: Shield, title: 'Roles & Permissions' }] : []),
+  ]
   const onSignOut = async () => { await signOut(); navigate('/login', { replace: true }) }
   return <div className="app-shell">
     <aside className={`sidebar ${mobileNav ? 'sidebar-open' : ''}`}>
@@ -29,8 +31,8 @@ export default function AppLayout() {
     </aside>
     {mobileNav && <div className="nav-overlay" onClick={() => setMobileNav(false)}/>}
     <div className="main-column">
-      <header className="topbar"><div className="topbar-start"><button className="icon-button mobile-menu" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu/></button></div><form className="searchbar" onSubmit={e => {e.preventDefault(); navigate(`/tickets${search ? `?q=${encodeURIComponent(search)}` : ''}`)}}><Search size={18}/><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tickets..."/><kbd>↵</kbd></form><div className="topbar-actions"><div className="topbar-divider"/><div className="profile"><div className="avatar">{getName(user).slice(0, 2).toUpperCase()}</div><div className="profile-copy"><strong>{getName(user)}</strong><span>{role}</span></div></div><button className="icon-button logout" onClick={onSignOut} aria-label="Sign out" title="Sign out"><LogOut size={19}/></button></div></header>
-      <main className="content"><Outlet/></main><footer className="footer">© {new Date().getFullYear()} Support Desk · Sanad-inspired interface <span>Ticket Management System v1.0</span></footer>
+      <header className="topbar"><div className="topbar-start"><button className="icon-button mobile-menu" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu/></button></div>{canBrowseTickets && <form className="searchbar" onSubmit={e => {e.preventDefault(); navigate(`/tickets${search ? `?q=${encodeURIComponent(search)}` : ''}`)}}><Search size={18}/><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tickets..."/><kbd>↵</kbd></form>}<div className="topbar-actions"><div className="topbar-divider"/><div className="profile"><div className="avatar">{getName(user).slice(0, 2).toUpperCase()}</div><div className="profile-copy"><strong>{getName(user)}</strong><span>{role}</span></div></div><button className="icon-button logout" onClick={onSignOut} aria-label="Sign out" title="Sign out"><LogOut size={19}/></button></div></header>
+      <main className="content">{!permissionsAvailable && <Notice>{permissionsUnavailableMessage}</Notice>}<Outlet/></main><footer className="footer">© {new Date().getFullYear()} Support Desk · Sanad-inspired interface <span>Ticket Management System v1.0</span></footer>
     </div>
   </div>
 }

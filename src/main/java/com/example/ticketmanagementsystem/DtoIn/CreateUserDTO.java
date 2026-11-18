@@ -29,7 +29,8 @@ public class CreateUserDTO {
     @Positive(message = "Department id must be a positive number")
     private Integer departmentId;
 
-    @NotEmpty(message = "Role can't be empty")
-    @Pattern(regexp = "^(ADMIN|AGENT|EMPLOYEE)$", message = "Role must be ADMIN, AGENT or EMPLOYEE")
+    @NotBlank(message = "Role can't be empty")
+    @Size(max = 20, message = "Role name can't exceed 20 characters")
+    @Pattern(regexp = "^[A-Z][A-Z0-9_]*$", message = "Role must contain uppercase letters, numbers or underscores and start with a letter")
     private String roleName;
 }

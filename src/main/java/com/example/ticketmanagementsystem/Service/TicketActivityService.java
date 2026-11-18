@@ -40,9 +40,13 @@ public class TicketActivityService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ApiException("Ticket not found"));
 
-        String role = user.getRole().getName();
+        if (!user.isActive()) {
+            throw new ApiException("You are not allowed to access this endpoint because your account is not active");
+        }
 
-        if (!role.equals("ADMIN")) {
+        boolean canViewAllTickets = user.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
+        if (!canViewAllTickets) {
 
             boolean createdByUser = ticket.getCreatedBy() != null &&
                     ticket.getCreatedBy().getId().equals(userId);
@@ -66,8 +70,8 @@ public class TicketActivityService {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new ApiException("User not found"));
 
-        if (!user.getRole().getName().equals("ADMIN")) {
-            throw new ApiException("Only admin can view recent activities");
+        if (!user.isActive()) {
+            throw new ApiException("You are not allowed to access this endpoint because your account is not active");
         }
 
         return ticketActivityRepository.findTop10ByOrderByCreatedAtDesc()

@@ -1,5 +1,8 @@
 package com.example.ticketmanagementsystem.Service;
 
+import com.example.ticketmanagementsystem.Api.ApiException;
+import com.example.ticketmanagementsystem.DtoOut.RoleResponseDTO;
+import com.example.ticketmanagementsystem.Model.Permission;
 import com.example.ticketmanagementsystem.Model.Role;
 import com.example.ticketmanagementsystem.Repository.RoleRepository;
 import jakarta.transaction.Transactional;
@@ -13,6 +16,21 @@ import java.util.List;
 @AllArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
+
+    public List<RoleResponseDTO> getAllRoles() {
+
+        return roleRepository.findAll()
+                .stream()
+                .map(role -> new RoleResponseDTO(
+                        role.getId(),
+                        role.getName(),
+                        role.getPermissions()
+                                .stream()
+                                .map(Permission::getName)
+                                .toList()
+                ))
+                .toList();
+    }
 
     @Transactional
     public String initializeRoles(){
@@ -52,5 +70,54 @@ public class RoleService {
         }
 
         return "Missing roles initialized successfully";
+    }
+
+    public void addRole(String name) {
+
+        Role existingRole = roleRepository.findRoleByName(name);
+
+        if (existingRole != null) {
+            throw new ApiException("Role already exists");
+        }
+
+        Role role = new Role();
+        role.setName(name);
+
+        roleRepository.save(role);
+    }
+
+    public RoleResponseDTO getRoleById(Integer roleId) {
+
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new ApiException("Role not found"));
+
+        return new RoleResponseDTO(
+                role.getId(),
+                role.getName(),
+                role.getPermissions()
+                        .stream()
+                        .map(Permission::getName)
+                        .toList()
+        );
+    }
+
+    @Transactional
+    public void deleteRole(Integer roleId) {
+
+        Role role = roleRepository.findById(roleId).orElseThrow(() -> new ApiException("Role not found"));
+
+        if (role.getName().equals("ADMIN")
+                || role.getName().equals("AGENT")
+                || role.getName().equals("EMPLOYEE")) {
+            throw new ApiException("Default roles cannot be deleted");
+        }
+
+        if (!role.getAuths().isEmpty()) {
+            throw new ApiException("Cannot delete a role assigned to users");
+        }
+
+        role.getPermissions().clear();
+
+        roleRepository.delete(role);
     }
 }

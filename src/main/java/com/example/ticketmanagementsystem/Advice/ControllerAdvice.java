@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.HttpStatus;
+import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -93,5 +96,14 @@ public class ControllerAdvice {
     public ResponseEntity<ApiResponse> RuntimeException(RuntimeException e) {
         log.error("Unexpected server error", e);
         return ResponseEntity.status(500).body(new ApiResponse("An unexpected error occurred. Please try again later."));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(
+            AccessDeniedException e) {
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(Map.of("message", "Access denied"));
     }
 }

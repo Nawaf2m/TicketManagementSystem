@@ -23,6 +23,6 @@ export function Notice({ type = 'error', children, onDismiss }) {
 export function Spinner({ label = 'Loading...' }) { return <div className="loading"><LoaderCircle className="spin" size={23}/>{label}</div> }
 export function EmptyState({ title = 'Nothing here yet', detail = 'Records will appear here when available.' }) { return <div className="empty-state"><div className="empty-symbol">✦</div><strong>{title}</strong><p>{detail}</p></div> }
 
-export function Modal({ title, children, onClose }) {
-  return <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}><div className="modal-card" role="dialog" aria-modal="true" aria-label={title}><div className="modal-heading"><h2>{title}</h2><button className="icon-button" onClick={onClose} aria-label="Close"><X size={20}/></button></div>{children}</div></div>
+export function Modal({ title, children, onClose, hideCloseButton = false }) {
+  return <div className="modal-backdrop" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose() }}><div className="modal-card" role="dialog" aria-modal="true" aria-label={title}><div className="modal-heading"><h2>{title}</h2>{!hideCloseButton && <button className="icon-button" onClick={onClose} aria-label="Close"><X size={20}/></button>}</div>{children}</div></div>
 }

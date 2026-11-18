@@ -17,18 +17,19 @@ const emptyForm = {
   name: '',
   email: '',
   password: '',
-  roleName: 'EMPLOYEE',
+  roleName: '',
   departmentId: ''
 }
 
 export default function UsersPage() {
-  const { user, signOut, refreshUser } = useAuth()
+  const { user, signOut, refreshUser, hasPermission } = useAuth()
   const [editing, setEditing] = useState(null)
   const [roleTarget, setRoleTarget] = useState(null)
-  const [newRole, setNewRole] = useState('EMPLOYEE')
+  const [newRole, setNewRole] = useState('')
   const [roleError, setRoleError] = useState('')
   const [toggling, setToggling] = useState(null)
   const [users, setUsers] = useState([])
+  const [roles, setRoles] = useState([])
   const [departments, setDepartments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -43,12 +44,15 @@ export default function UsersPage() {
     setError('')
 
     try {
-      const [us, ds] = await Promise.allSettled([
-        getList(paths.users), getList(paths.departments)
+      const [us, ds, rs] = await Promise.allSettled([
+        hasPermission('USER_VIEW') ? getList(paths.users) : Promise.resolve([]),
+        hasPermission('DEPARTMENT_VIEW') ? getList(paths.departments) : Promise.resolve([]),
+        hasPermission('ROLE_VIEW') ? getList(paths.roles) : Promise.resolve([]),
       ])
       setUsers(us.status === 'fulfilled' ? us.value : [])
       setDepartments(ds.status === 'fulfilled' ? ds.value : [])
-      const errors = [us, ds].filter(result => result.status === 'rejected')
+      setRoles(rs.status === 'fulfilled' ? rs.value : [])
+      const errors = [us, ds, rs].filter(result => result.status === 'rejected')
       if (errors.length) setError(errors.map(result => messageFromError(result.reason)).join(' '))
     } catch (err) {
       setUsers([]); setDepartments([]); setError(messageFromError(err))
@@ -60,9 +64,10 @@ export default function UsersPage() {
 
   useEffect(() => {
     load()
-  }, [])
+  }, [hasPermission])
 
   function openCreateModal() {
+    if (!hasPermission('USER_CREATE')) return
     setEditing(null)
     setForm({ ...emptyForm })
     setModalError('')
@@ -78,7 +83,7 @@ export default function UsersPage() {
 
   async function create(e) {
     e.preventDefault()
-    if (saving) return
+    if (saving || !hasPermission(editing ? 'USER_UPDATE' : 'USER_CREATE')) return
 
     setSaving(true)
     setModalError('')
@@ -95,7 +100,7 @@ export default function UsersPage() {
       if (details.name.length < 2) throw new Error('Name must contain at least 2 characters.')
       if (editing) {
         await api.put(paths.updateUser(editing.id), details)
-        // Basic Auth still holds the previous email until the next sign-in.
+        // The current JWT subject still contains the previous email.
         if (editing.id === user.id && details.email !== user.email) { signOut(); return }
         if (editing.id === user.id) {
           try { await refreshUser() } catch { signOut(); return }
@@ -119,6 +124,7 @@ export default function UsersPage() {
   }
 
   function openEdit(u) {
+    if (!hasPermission('USER_UPDATE')) return
     setEditing(u)
     setForm({ ...emptyForm, name: u.name, email: u.email, departmentId: String(departments.find(d => d.name === u.departmentName)?.id || '') })
     setModalError('')
@@ -127,7 +133,7 @@ export default function UsersPage() {
 
   async function changeRole(e) {
     e.preventDefault()
-    if (saving) return
+    if (saving || !hasPermission('USER_MANAGE_ROLE') || !roles.some(role => role.name === newRole)) return
     setSaving(true); setRoleError('')
     try {
       await api.put(paths.userRole(roleTarget.id), { roleName: newRole })
@@ -140,7 +146,7 @@ export default function UsersPage() {
   }
 
   async function toggleActive(u) {
-    if (toggling !== null) return
+    if (toggling !== null || !hasPermission(u.active ? 'USER_DEACTIVATE' : 'USER_ACTIVATE')) return
     setError('')
     setSuccess('')
 
@@ -184,10 +190,10 @@ export default function UsersPage() {
               Refresh
             </button>
 
-            <button className="btn btn-primary" onClick={openCreateModal}>
+            {hasPermission('USER_CREATE') && <button className="btn btn-primary" onClick={openCreateModal}>
               <Plus size={18}/>
               Add User
-            </button>
+            </button>}
           </>
         }
       />
@@ -198,7 +204,7 @@ export default function UsersPage() {
         {success}
       </Notice>
 
-      <Panel
+      {hasPermission('USER_VIEW') && <Panel
         title="Team Members"
         subtitle={`${users.length} people in your workspace`}
         icon={Users}
@@ -261,9 +267,9 @@ export default function UsersPage() {
                     </td>
 
                     <td>
-                      <button className="btn btn-small btn-outline" disabled={saving || toggling !== null} onClick={() => openEdit(u)}><Pencil size={13}/> Edit</button>{' '}
-                      <button className="btn btn-small btn-outline" disabled={saving || toggling !== null} onClick={() => {setRoleTarget(u);setNewRole(u.roleName);setRoleError('')}}>Change role</button>{' '}
-                      <button
+                      {hasPermission('USER_UPDATE') && <button className="btn btn-small btn-outline" disabled={saving || toggling !== null} onClick={() => openEdit(u)}><Pencil size={13}/> Edit</button>}{' '}
+                      {hasPermission('USER_MANAGE_ROLE') && <button className="btn btn-small btn-outline" disabled={saving || toggling !== null || !hasPermission('ROLE_VIEW') || !roles.length} title={!hasPermission('ROLE_VIEW') ? 'Viewing role choices requires ROLE_VIEW.' : undefined} onClick={() => {setRoleTarget(u);setNewRole(u.roleName);setRoleError('')}}>Change role</button>}{' '}
+                      {hasPermission(u.active ? 'USER_DEACTIVATE' : 'USER_ACTIVATE') && <button
                         className="btn btn-small btn-outline"
                         disabled={toggling !== null || saving || typeof u.active !== 'boolean'}
                         onClick={() => toggleActive(u)}
@@ -273,7 +279,7 @@ export default function UsersPage() {
                           : u.active === false
                             ? 'Activate'
                             : 'Unavailable'}
-                      </button>
+                      </button>}
                     </td>
                   </tr>
                 ))}
@@ -286,9 +292,9 @@ export default function UsersPage() {
             detail="Add someone to get started."
           />
         )}
-      </Panel>
+      </Panel>}
 
-      {showCreate && (
+      {showCreate && hasPermission(editing ? 'USER_UPDATE' : 'USER_CREATE') && (
         <Modal title={editing ? "Edit Team Member" : "Add Team Member"} onClose={closeCreateModal}>
           <form className="modal-form" onSubmit={create}>
 
@@ -297,6 +303,8 @@ export default function UsersPage() {
             </p>
 
             <Notice>{modalError}</Notice>
+            {!hasPermission('DEPARTMENT_VIEW') && <Notice>Department choices require permission to view departments.</Notice>}
+            {!editing && !hasPermission('ROLE_VIEW') && <Notice>Role choices require permission to view roles.</Notice>}
 
             <label className="field">
               <span>Full name</span>
@@ -358,9 +366,8 @@ export default function UsersPage() {
                   roleName: e.target.value
                 })}
               >
-                <option value="ADMIN">Admin</option>
-                <option value="AGENT">Agent</option>
-                <option value="EMPLOYEE">Employee</option>
+                <option value="">Choose a role</option>
+                {roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}
               </select>
             </label>}
 
@@ -398,7 +405,7 @@ export default function UsersPage() {
               <button
                 className="btn btn-primary"
                 type="submit"
-                disabled={saving}
+                disabled={saving || !form.departmentId || (!editing && !roles.some(role => role.name === form.roleName))}
               >
                 {saving ? 'Saving...' : editing ? 'Save Changes' : 'Create User'}
               </button>
@@ -406,11 +413,11 @@ export default function UsersPage() {
           </form>
         </Modal>
       )}
-      {roleTarget && <Modal title={`Change role for ${roleTarget.name}`} onClose={() => {if (!saving) setRoleTarget(null)}}>
+      {roleTarget && hasPermission('USER_MANAGE_ROLE') && <Modal title={`Change role for ${roleTarget.name}`} onClose={() => {if (!saving) setRoleTarget(null)}}>
         <form className="modal-form" onSubmit={changeRole}>
           <Notice>{roleError}</Notice>
           {roleTarget.id === user.id && <p className="subdued">Changing your own role will sign you out.</p>}
-          <label className="field"><span>Role</span><select value={newRole} onChange={e => setNewRole(e.target.value)}><option value="ADMIN">Admin</option><option value="AGENT">Agent</option><option value="EMPLOYEE">Employee</option></select></label>
+          <label className="field"><span>Role</span><select value={newRole} onChange={e => setNewRole(e.target.value)}>{roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}</select></label>
           <div className="modal-actions"><button type="button" className="btn btn-ghost" disabled={saving} onClick={() => setRoleTarget(null)}>Cancel</button><button className="btn btn-primary" disabled={saving || newRole === roleTarget.roleName}>{saving ? 'Saving...' : 'Save Role'}</button></div>
         </form>
       </Modal>}
