@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +26,13 @@ public class UserController {
     @Value("${app.admin.setup-key}")
     private String adminSetupKey;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public UserResponseDTO getCurrentUser(@AuthenticationPrincipal User user) {
         return userService.getCurrentUser(user.getId());
     }
 
+    @PreAuthorize("denyAll()")
     @PostMapping("/initialize-admin")
     public ResponseEntity<?> initializeAdmin(@RequestHeader("X-Setup-Key") String setupKey, @RequestBody @Valid CreateUserDTO newUser) {
 
@@ -43,40 +46,47 @@ public class UserController {
                 .body(new ApiResponse("Admin initialized successfully"));
     }
 
+    @PreAuthorize("hasAuthority('USER_VIEW')")
     @GetMapping("/get")
     public ResponseEntity<?> getAllUsers(@AuthenticationPrincipal User user){
         return ResponseEntity.status(200).body(userService.getAllUsers(user.getId()));
     }
 
+    @PreAuthorize("hasAuthority('USER_CREATE')")
     @PostMapping("/add")
     public ResponseEntity<?> addUser(@AuthenticationPrincipal User user, @RequestBody @Valid CreateUserDTO newUser){
         userService.addUser(user.getId(), newUser);
         return ResponseEntity.status(200).body(new ApiResponse("User added successfully"));
     }
 
+    @PreAuthorize("hasAuthority('USER_UPDATE')")
     @PutMapping("/update/{targetUserId}")
     public ResponseEntity<?> updateUser(@AuthenticationPrincipal User user,@PathVariable Integer targetUserId,@RequestBody @Valid UpdateUserDTO updateUser){
         userService.updateUser(user.getId(),targetUserId, updateUser);
         return ResponseEntity.status(200).body(new ApiResponse("User updated successfully"));
     }
 
+    @PreAuthorize("hasAuthority('USER_MANAGE_ROLE')")
     @PutMapping("/update-user-role/{targetUserId}")
     public ResponseEntity<?> updateUserRole(@AuthenticationPrincipal User user, @PathVariable Integer targetUserId, @RequestBody @Valid UpdateUserRoleDTO newRole){
         userService.updateUserRole(user.getId(), targetUserId, newRole);
         return ResponseEntity.status(200).body(new ApiResponse("User role updated successfully"));
     }
 
+    @PreAuthorize("hasAuthority('USER_VIEW')")
     @GetMapping("/get-user-by-id/{targetUserId}")
     public ResponseEntity<?> getUserById(@AuthenticationPrincipal User user, @PathVariable Integer targetUserId){
         return ResponseEntity.status(200).body(userService.getUserById(user.getId(), targetUserId));
     }
 
+    @PreAuthorize("hasAuthority('USER_DEACTIVATE')")
     @PatchMapping("/deactivate-user/{targetUserId}")
     public ResponseEntity<?> deactivateUser(@AuthenticationPrincipal User user, @PathVariable Integer targetUserId){
         userService.deactivateUser(user.getId(),targetUserId);
         return ResponseEntity.status(200).body(new ApiResponse("User account has been deactivated successfully"));
     }
 
+    @PreAuthorize("hasAuthority('USER_ACTIVATE')")
     @PatchMapping("/activate-user/{targetUserId}")
     public ResponseEntity<?> activateUser(@AuthenticationPrincipal User user,@PathVariable Integer targetUserId){
         userService.activateUser(user.getId(), targetUserId);

@@ -10,6 +10,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,22 +24,26 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
     private final AttachmentRepository attachmentRepository;
 
+    @PreAuthorize("hasAuthority('ATTACHMENT_UPLOAD')")
     @PostMapping(value = "/upload/{ticketId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadAttachment(@AuthenticationPrincipal User user, @PathVariable Integer ticketId, @RequestParam("file") MultipartFile file){
         attachmentService.uploadAttachment(user.getId(), ticketId, file);
         return ResponseEntity.status(201).body(new ApiResponse("Attachment uploaded successfully"));
     }
 
+    @PreAuthorize("hasAuthority('ATTACHMENT_VIEW')")
     @GetMapping("/get-ticket-attachments/{ticketId}")
     public ResponseEntity<?> getTicketAttachments(@AuthenticationPrincipal User user, @PathVariable Integer ticketId){
         return ResponseEntity.status(200).body(attachmentService.getTicketAttachments(user.getId(), ticketId));
     }
 
+    @PreAuthorize("hasAuthority('ATTACHMENT_VIEW')")
     @GetMapping("/get-attachment-by-id/{attachmentId}")
     public ResponseEntity<?> getAttachmentById(@AuthenticationPrincipal User user, @PathVariable Integer attachmentId){
         return ResponseEntity.status(200).body(attachmentService.getAttachmentById(user.getId(), attachmentId));
     }
 
+    @PreAuthorize("hasAuthority('ATTACHMENT_DOWNLOAD')")
     @GetMapping("/download/{attachmentId}")
     public ResponseEntity<Resource> downloadAttachment(@AuthenticationPrincipal User user, @PathVariable Integer attachmentId) {
         Resource resource = attachmentService.downloadAttachment(user.getId(), attachmentId);

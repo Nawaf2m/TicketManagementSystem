@@ -23,15 +23,15 @@ public class TicketService {
     private final TicketActivityService ticketActivityService;
 
     public List<TicketResponseDTO> getAllTickets(Integer currentUserId) {
-        //Check if the user who accesses this endpoint is existed and his role is admin.
+        // Check if the current user exists and is active.
         User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive() || currentUser.getRole() == null || !currentUser.getRole().getName().equals("ADMIN")) {
-            throw new ApiException("You are not allowed to access this endpoint");
+        if (!currentUser.isActive()) {
+            throw new ApiException("You are not allowed to access this endpoint because your account is not active");
         }
 
         List<Ticket> tickets = ticketRepository.findAll();
@@ -172,22 +172,14 @@ public class TicketService {
                 assignedToName
         );
 
-        String currentUserRole = currentUser.getRole().getName();
+        boolean canViewAllTickets = currentUser.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
+        boolean isCreator = targetTicket.getCreatedBy().getId().equals(currentUserId);
+        boolean isAssignedUser = targetTicket.getAssignedTo() != null
+                && targetTicket.getAssignedTo().getId().equals(currentUserId);
 
-        if (currentUserRole.equals("ADMIN")){
+        if (canViewAllTickets || isCreator || isAssignedUser) {
             return ticketResponseDTO;
-        } else if (currentUserRole.equals("AGENT")) {
-            if ((targetTicket.getAssignedTo() != null &&
-                    targetTicket.getAssignedTo().getId().equals(currentUserId))
-                    || targetTicket.getCreatedBy().getId().equals(currentUserId)) {
-
-                return ticketResponseDTO;
-            }
-        }
-        else {
-            if (targetTicket.getCreatedBy().getId().equals(currentUserId)){
-                return ticketResponseDTO;
-            }
         }
 
         throw new ApiException("You are not allowed to access this ticket");
@@ -195,15 +187,15 @@ public class TicketService {
 
     @Transactional
     public void assignTicket(Integer currentUserId, Integer ticketId, Integer agentId) {
-        //Check if the user who accesses this endpoint is existed and his role is admin.
+        // Check if the current user exists and is active.
         User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive() || currentUser.getRole() == null || !currentUser.getRole().getName().equals("ADMIN")) {
-            throw new ApiException("You are not allowed to access this endpoint");
+        if (!currentUser.isActive()) {
+            throw new ApiException("You are not allowed to access this endpoint because your account is not active");
         }
 
         Ticket targetTicket = ticketRepository.findTicketById(ticketId);
@@ -226,7 +218,7 @@ public class TicketService {
         }
 
         //check if the assign account role is agent.
-        if (!agent.getRole().getName().equals("AGENT")){
+        if (agent.getRole() == null || !agent.getRole().getName().equals("AGENT")){
             throw new ApiException("The selected user must have the AGENT role");
         }
 
@@ -272,15 +264,11 @@ public class TicketService {
             throw new ApiException("Ticket not found.");
         }
 
-        String currentUserRole = currentUser.getRole().getName();
-
-        //check if user role is agent or admin.
-        if (!(currentUserRole.equals("AGENT") || currentUserRole.equals("ADMIN"))){
-            throw new ApiException("To advance a ticket status your role must be AGENT or ADMIN");
-        }
-
-        //check if the agent is assign to this ticket.
-        if (currentUserRole.equals("AGENT") && (targetTicket.getAssignedTo() == null || !targetTicket.getAssignedTo().getId().equals(currentUserId))) {
+        // Updating status requires global ticket scope or assignment to this user.
+        boolean canViewAllTickets = currentUser.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
+        if (!canViewAllTickets && (targetTicket.getAssignedTo() == null
+                || !targetTicket.getAssignedTo().getId().equals(currentUserId))) {
             throw new ApiException("You are not assigned to this ticket");
         }
 
@@ -311,14 +299,14 @@ public class TicketService {
 
     @Transactional
     public void updateTicketPriority(Integer currentUserId, Integer ticketId, String newPriority) {
-        //Check if the user who accesses this endpoint is existed and his role is admin.
+        // Check if the current user exists and is active.
         User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive() || currentUser.getRole() == null || !currentUser.getRole().getName().equals("ADMIN")) {
+        if (!currentUser.isActive()) {
             throw new ApiException("You are not allowed to access this endpoint");
         }
 
@@ -363,12 +351,6 @@ public class TicketService {
         //check if the account is active.
         if (!currentUser.isActive()) {
             throw new ApiException("You are not allowed to access this endpoint because your account is not active");
-        }
-
-        String currentUserRole = currentUser.getRole().getName();
-
-        if (!currentUserRole.equals("AGENT")){
-            throw new ApiException("Your role must be agent to access this endpoint");
         }
 
         List<Ticket> tickets = ticketRepository.findAllByAssignedTo_Id(currentUserId);

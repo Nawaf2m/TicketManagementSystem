@@ -8,15 +8,18 @@ import TicketDetailPage from './pages/TicketDetailPage'
 import UsersPage from './pages/UsersPage'
 import DepartmentsPage from './pages/DepartmentsPage'
 import NotFoundPage from './pages/NotFoundPage'
+import RolesPage from './pages/RolesPage'
+import { EmptyState } from './components/UI'
+import { departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from './utils/permissions'
 
 function RequireAuth({ children }) {
   const { user } = useAuth()
   return user ? children : <Navigate to="/login" replace />
 }
 
-function AdminOnly({ children }) {
-  const { role } = useAuth()
-  return role === 'ADMIN' ? children : <Navigate to="/dashboard" replace />
+function RequirePermission({ anyOf, children }) {
+  const { hasAnyPermission, permissionsAvailable } = useAuth()
+  return hasAnyPermission(...anyOf) ? children : <EmptyState title={permissionsAvailable ? 'Access denied' : 'Permissions unavailable'} detail={permissionsAvailable ? 'You do not have permission to view this page.' : permissionsUnavailableMessage} />
 }
 
 export default function App() {
@@ -27,17 +30,18 @@ export default function App() {
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/tickets" element={<TicketsPage />} />
-        <Route path="/tickets/:id" element={<TicketDetailPage />} />
-        <Route path="/users" element={<AdminOnly><UsersPage /></AdminOnly>} />
+        <Route path="/tickets" element={<RequirePermission anyOf={[...ticketListPermissions, 'TICKET_CREATE']}><TicketsPage /></RequirePermission>} />
+        <Route path="/tickets/:id" element={<RequirePermission anyOf={['TICKET_VIEW']}><TicketDetailPage /></RequirePermission>} />
+        <Route path="/users" element={<RequirePermission anyOf={userPagePermissions}><UsersPage /></RequirePermission>} />
         <Route
           path="/departments"
           element={
-            <AdminOnly>
+            <RequirePermission anyOf={departmentPagePermissions}>
               <DepartmentsPage />
-            </AdminOnly>
+            </RequirePermission>
           }
         />
+        <Route path="/roles" element={<RequirePermission anyOf={rolePagePermissions}><RolesPage /></RequirePermission>} />
       </Route>
       <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
       <Route path="*" element={<NotFoundPage />} />

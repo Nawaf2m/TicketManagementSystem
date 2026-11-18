@@ -7,6 +7,7 @@ import com.example.ticketmanagementsystem.Service.CommentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +17,20 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
+    @PreAuthorize("hasAuthority('COMMENT_CREATE')")
     @PostMapping("/add/{ticketId}")
     public ResponseEntity<?> addComment(@AuthenticationPrincipal User user, @PathVariable Integer ticketId, @RequestBody @Valid CreateCommentDTO commentDTO){
         commentService.addComment(user.getId(), ticketId, commentDTO);
         return ResponseEntity.status(200).body(new ApiResponse("Comment added successfully"));
     }
 
+    @PreAuthorize("hasAuthority('COMMENT_VIEW')")
     @GetMapping("/get-ticket-comments/{ticketId}")
     public ResponseEntity<?> getTicketComments(@AuthenticationPrincipal User user, @PathVariable Integer ticketId){
         return ResponseEntity.status(200).body(commentService.getTicketComments(user.getId(), ticketId));
     }
 
+    @PreAuthorize("hasAuthority('COMMENT_VIEW')")
     @GetMapping("/get-comment-by-id/{commentId}")
     public ResponseEntity<?> getCommentById(@AuthenticationPrincipal User user, @PathVariable Integer commentId){
         return ResponseEntity.status(200).body(commentService.getCommentById(user.getId(), commentId));

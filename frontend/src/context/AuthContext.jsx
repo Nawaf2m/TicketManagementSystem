@@ -1,6 +1,7 @@
-﻿import { createContext, useContext, useEffect, useState } from 'react'
+﻿import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { api, login, logout, onSessionEnded, refreshAccessToken } from '../services/api'
 import { getRole, objectOf } from '../utils/data'
+import { createPermissionAccess } from '../utils/permissions'
 
 const AuthContext = createContext(null)
 
@@ -9,6 +10,7 @@ export function AuthProvider({ children }) {
   const [busy, setBusy] = useState(false)
   const [initializing, setInitializing] = useState(true)
   const [sessionError, setSessionError] = useState('')
+  const permissionAccess = useMemo(() => createPermissionAccess(user?.permissions), [user?.permissions])
 
   useEffect(() => {
     let active = true
@@ -33,8 +35,16 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function refreshUser() {
-    const response = await api.get('/api/v1/user/me')
-    setUser(objectOf(response.data))
+    try {
+      const response = await api.get('/api/v1/user/me')
+      const currentUser = objectOf(response.data)
+      setUser(currentUser)
+      return currentUser
+    } catch (error) {
+      // A failed reload must not leave stale permissions enabled.
+      setUser(current => current ? { ...current, permissions: null } : current)
+      throw error
+    }
   }
 
   async function signIn(email, password) {
@@ -67,7 +77,7 @@ export function AuthProvider({ children }) {
     }
   }
 
-  return <AuthContext.Provider value={{ user, busy, initializing, sessionError, signIn, signOut, refreshUser, role: getRole(user) }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, busy, initializing, sessionError, signIn, signOut, refreshUser, role: getRole(user), ...permissionAccess }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => useContext(AuthContext)

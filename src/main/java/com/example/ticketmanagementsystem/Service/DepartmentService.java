@@ -35,16 +35,14 @@ public class DepartmentService {
     }
 
     public void addDepartment(Integer currentUserId, DepartmentDTO departmentToAdd){
-        //Check if the user who accesses this endpoint is existed and his role is admin.
+        // Check if the current user exists and is active.
         User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive()
-                || currentUser.getRole() == null
-                || !currentUser.getRole().getName().equals("ADMIN")) {
+        if (!currentUser.isActive()) {
 
             throw new ApiException("You are not allowed to access this endpoint");
         }
@@ -63,16 +61,14 @@ public class DepartmentService {
     }
 
     public void updateDepartment(Integer currentUserId, Integer departmentId, DepartmentDTO departmentDTO) {
-        //Check if the user who accesses this endpoint is existed and his role is admin.
+        // Check if the current user exists and is active.
         User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive()
-                || currentUser.getRole() == null
-                || !currentUser.getRole().getName().equals("ADMIN")) {
+        if (!currentUser.isActive()) {
 
             throw new ApiException("You are not allowed to access this endpoint");
         }
@@ -107,16 +103,14 @@ public class DepartmentService {
     }
 
     public void deleteDepartment(Integer currentUserId, Integer departmentId) {
-        //Check if the user who accesses this endpoint is existed and his role is admin.
+        // Check if the current user exists and is active.
         User currentUser = authRepository.findUserById(currentUserId);
 
         if (currentUser == null){
             throw new ApiException("Wrong current user id");
         }
 
-        if (!currentUser.isActive()
-                || currentUser.getRole() == null
-                || !currentUser.getRole().getName().equals("ADMIN")) {
+        if (!currentUser.isActive()) {
 
             throw new ApiException("You are not allowed to access this endpoint");
         }

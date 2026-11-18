@@ -105,6 +105,14 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  roles: '/api/v1/role/get',
+  roleById: (id) => `/api/v1/role/get/${id}`,
+  addRole: '/api/v1/role/add',
+  deleteRole: (id) => `/api/v1/role/delete/${id}`,
+  permissions: '/api/v1/permissions/get',
+  permissionById: (id) => `/api/v1/permissions/get/${id}`,
+  assignPermission: (roleId, permissionId) => `/api/v1/permissions/assign/${roleId}/${permissionId}`,
+  removePermission: (roleId, permissionId) => `/api/v1/permissions/remove/${roleId}/${permissionId}`,
   users: '/api/v1/user/get',
   addUser: '/api/v1/user/add',
   updateUser: (id) => `/api/v1/user/update/${id}`,

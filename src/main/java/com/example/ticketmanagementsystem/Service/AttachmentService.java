@@ -56,16 +56,16 @@ public class AttachmentService {
             throw new ApiException("Can't add attachment to CLOSED ticket.");
         }
 
-        // Check if the current user has permission to comment on this ticket.
-        boolean isAdmin = currentUser.getRole().getName().equals("ADMIN");
+        // Operation permissions are checked by the controller; enforce ticket scope here.
+        boolean canViewAllTickets = currentUser.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
 
         boolean isCreator = targetTicket.getCreatedBy().getId().equals(currentUserId);
 
-        boolean isAssignedAgent = currentUser.getRole().getName().equals("AGENT")
-                && targetTicket.getAssignedTo() != null
+        boolean isAssignedUser = targetTicket.getAssignedTo() != null
                 && targetTicket.getAssignedTo().getId().equals(currentUserId);
 
-        if (!isAdmin && !isCreator && !isAssignedAgent) {
+        if (!canViewAllTickets && !isCreator && !isAssignedUser) {
             throw new ApiException("You are not allowed to add attachment to this ticket.");
         }
 
@@ -221,16 +221,16 @@ public class AttachmentService {
             throw new ApiException("Ticket not found.");
         }
 
-        // Check if the current user has permission to comment on this ticket.
-        boolean isAdmin = currentUser.getRole().getName().equals("ADMIN");
+        // Operation permissions are checked by the controller; enforce ticket scope here.
+        boolean canViewAllTickets = currentUser.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
 
         boolean isCreator = targetTicket.getCreatedBy().getId().equals(currentUserId);
 
-        boolean isAssignedAgent = currentUser.getRole().getName().equals("AGENT")
-                && targetTicket.getAssignedTo() != null
+        boolean isAssignedUser = targetTicket.getAssignedTo() != null
                 && targetTicket.getAssignedTo().getId().equals(currentUserId);
 
-        if (!isAdmin && !isCreator && !isAssignedAgent) {
+        if (!canViewAllTickets && !isCreator && !isAssignedUser) {
             throw new ApiException("You are not allowed to see this ticket attachment.");
         }
 
@@ -278,16 +278,16 @@ public class AttachmentService {
 
         Ticket targetTicket = targetAttachment.getTicket();
 
-        // Check if the current user has permission to comment on this ticket.
-        boolean isAdmin = currentUser.getRole().getName().equals("ADMIN");
+        // Operation permissions are checked by the controller; enforce ticket scope here.
+        boolean canViewAllTickets = currentUser.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
 
         boolean isCreator = targetTicket.getCreatedBy().getId().equals(currentUserId);
 
-        boolean isAssignedAgent = currentUser.getRole().getName().equals("AGENT")
-                && targetTicket.getAssignedTo() != null
+        boolean isAssignedUser = targetTicket.getAssignedTo() != null
                 && targetTicket.getAssignedTo().getId().equals(currentUserId);
 
-        if (!isAdmin && !isCreator && !isAssignedAgent) {
+        if (!canViewAllTickets && !isCreator && !isAssignedUser) {
             throw new ApiException("You are not allowed to see this ticket attachment.");
         }
 
@@ -320,16 +320,16 @@ public class AttachmentService {
 
         Ticket targetTicket = targetAttachment.getTicket();
 
-        // Check if the current user has permission to comment on this ticket.
-        boolean isAdmin = currentUser.getRole().getName().equals("ADMIN");
+        // Operation permissions are checked by the controller; enforce ticket scope here.
+        boolean canViewAllTickets = currentUser.getAuthorities().stream()
+                .anyMatch(authority -> "TICKET_VIEW_ALL".equals(authority.getAuthority()));
 
         boolean isCreator = targetTicket.getCreatedBy().getId().equals(currentUserId);
 
-        boolean isAssignedAgent = currentUser.getRole().getName().equals("AGENT")
-                && targetTicket.getAssignedTo() != null
+        boolean isAssignedUser = targetTicket.getAssignedTo() != null
                 && targetTicket.getAssignedTo().getId().equals(currentUserId);
 
-        if (!isAdmin && !isCreator && !isAssignedAgent) {
+        if (!canViewAllTickets && !isCreator && !isAssignedUser) {
             throw new ApiException("You are not allowed to see this ticket attachment.");
         }
 
