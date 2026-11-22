@@ -9,6 +9,7 @@ export function createPermissionAccess(permissionNames) {
 }
 
 export const departmentPagePermissions = ['DEPARTMENT_VIEW', 'DEPARTMENT_CREATE', 'DEPARTMENT_UPDATE', 'DEPARTMENT_DELETE']
+export const bankPagePermissions = ['BANK_VIEW', 'BANK_CREATE']
 export const userPagePermissions = ['USER_VIEW', 'USER_CREATE', 'USER_UPDATE', 'USER_MANAGE_ROLE', 'USER_ACTIVATE', 'USER_DEACTIVATE']
 export const ticketListPermissions = ['TICKET_VIEW_ALL', 'TICKET_VIEW_OWN', 'TICKET_VIEW_ASSIGNED']
 export const rolePagePermissions = ['ROLE_VIEW', 'ROLE_CREATE', 'ROLE_DELETE', 'ROLE_MANAGE_PERMISSIONS', 'PERMISSION_VIEW']

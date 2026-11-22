@@ -105,6 +105,11 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  banks: '/api/v1/bank/get',
+  bankById: (id) => `/api/v1/bank/get-bank-by-id/${id}`,
+  addBank: '/api/v1/bank/add',
+  updateBankName: (id) => `/api/v1/bank/update-name/${id}`,
+  deleteBank: (id) => `/api/v1/bank/delete/${id}`,
   roles: '/api/v1/role/get',
   roleById: (id) => `/api/v1/role/get/${id}`,
   addRole: '/api/v1/role/add',
