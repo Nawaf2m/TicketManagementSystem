@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,4 +26,10 @@ public class Bank {
 
     @Column(columnDefinition = "varchar(1)", nullable = false, unique = true)
     private String code;
+
+    @Column(nullable = false)
+    private Integer lastTerminalSequence = 0;
+
+    @OneToMany(mappedBy = "bank")
+    private List<Terminal> terminals = new ArrayList<>();
 }
