@@ -64,7 +64,13 @@ public class PermissionInitializer implements CommandLineRunner {
                 "ROLE_MANAGE_PERMISSIONS",
 
                 // Permissions
-                "PERMISSION_VIEW"
+                "PERMISSION_VIEW",
+
+                //Bank
+                "BANK_VIEW",
+                "BANK_CREATE",
+                "BANK_UPDATE",
+                "BANK_DELETE"
         );
 
         for (String name : permissions) {
