@@ -62,10 +62,7 @@ public class AuthController {
             return new LoginResponseDTO(accessToken, "Bearer", 900);
 
         } catch (AuthenticationException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Invalid email or password"
-            );
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
     }
 
@@ -96,10 +93,7 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse> logout(
-            @CookieValue(name = "refreshToken", required = false) String refreshToken,
-            HttpServletResponse response) {
-
+    public ResponseEntity<ApiResponse> logout(@CookieValue(name = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
         refreshTokenService.revokeRefreshToken(refreshToken);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
