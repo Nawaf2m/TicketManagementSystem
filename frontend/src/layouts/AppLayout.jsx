@@ -1,10 +1,10 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Building2, Landmark, LayoutDashboard, LogOut, Menu, Search, Shield, Ticket, Users, X } from 'lucide-react'
+import { Building2, Landmark, MapPin, LayoutDashboard, LogOut, Menu, Search, Shield, Ticket, Users, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { getName } from '../utils/data'
 import { Notice } from '../components/UI'
-import { bankPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from '../utils/permissions'
+import { bankPagePermissions, cityPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from '../utils/permissions'
 
 const commonItems = [{ href: '/dashboard', icon: LayoutDashboard, title: 'Dashboard' }]
 
@@ -18,6 +18,7 @@ export default function AppLayout() {
     ...commonItems,
     ...(canBrowseTickets ? [{ href: '/tickets', icon: Ticket, title: 'Tickets' }] : []),
     ...(hasAnyPermission(...departmentPagePermissions) ? [{ href: '/departments', icon: Building2, title: 'Departments' }] : []),
+    ...(hasAnyPermission(...cityPagePermissions) ? [{ href: '/cities', icon: MapPin, title: 'City Management' }] : []),
     ...(hasAnyPermission(...bankPagePermissions) ? [{ href: '/banks', icon: Landmark, title: 'Bank Management' }] : []),
     ...(hasAnyPermission(...userPagePermissions) ? [{ href: '/users', icon: Users, title: 'Users' }] : []),
     ...(hasAnyPermission(...rolePagePermissions) ? [{ href: '/roles', icon: Shield, title: 'Roles & Permissions' }] : []),

@@ -5,11 +5,13 @@ import com.example.ticketmanagementsystem.Model.Permission;
 import com.example.ticketmanagementsystem.Repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Order(2)
 @RequiredArgsConstructor
 public class PermissionInitializer implements CommandLineRunner {
 
@@ -70,7 +72,13 @@ public class PermissionInitializer implements CommandLineRunner {
                 "BANK_VIEW",
                 "BANK_CREATE",
                 "BANK_UPDATE",
-                "BANK_DELETE"
+                "BANK_DELETE",
+
+                //City
+                "CITY_VIEW",
+                "CITY_CREATE",
+                "CITY_UPDATE",
+                "CITY_DELETE"
         );
 
         for (String name : permissions) {
