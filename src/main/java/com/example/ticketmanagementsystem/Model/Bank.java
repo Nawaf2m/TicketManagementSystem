@@ -1,14 +1,10 @@
 package com.example.ticketmanagementsystem.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
