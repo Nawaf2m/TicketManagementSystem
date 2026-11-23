@@ -40,9 +40,18 @@ public class Ticket {
     private String priority;
 
     @NotEmpty(message = "Status can't be empty")
-    @Pattern(regexp = "^(OPEN|IN_PROGRESS|RESOLVED|CLOSED)$", message = "Status must be OPEN, IN_PROGRESS, RESOLVED or CLOSED")
+    @Pattern(regexp = "^(OPEN|IN_PROGRESS|CANCELLED|CLOSED)$", message = "Status must be OPEN, IN_PROGRESS, CANCELLED or CLOSED")
     @Column(columnDefinition = "varchar(20) not null")
     private String status;
+
+    @NotEmpty(message = "Type can't be empty")
+    @Pattern(regexp = "^(INSTALL|MAINTENANCE)$", message = "Type must be MAINTENANCE or INSTALL")
+    @Column(columnDefinition = "varchar(20) not null")
+    private String type;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Terminal terminal;
 
     @CreationTimestamp
     @Column(updatable = false)

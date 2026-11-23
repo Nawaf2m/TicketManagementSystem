@@ -1,12 +1,12 @@
 package com.example.ticketmanagementsystem.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,4 +22,10 @@ public class Bank {
 
     @Column(columnDefinition = "varchar(1)", nullable = false, unique = true)
     private String code;
+
+    @Column(nullable = false)
+    private Integer lastTerminalSequence = 0;
+
+    @OneToMany(mappedBy = "bank")
+    private List<Terminal> terminals = new ArrayList<>();
 }
