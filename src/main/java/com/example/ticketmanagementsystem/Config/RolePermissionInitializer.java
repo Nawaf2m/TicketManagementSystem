@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-@Order(2)
+@Order(3)
 public class RolePermissionInitializer implements ApplicationRunner {
 
     private final RoleRepository roleRepository;
@@ -65,7 +65,15 @@ public class RolePermissionInitializer implements ApplicationRunner {
                 "ROLE_CREATE",
                 "ROLE_DELETE",
                 "ROLE_MANAGE_PERMISSIONS",
-                "PERMISSION_VIEW"
+                "PERMISSION_VIEW",
+                "BANK_VIEW",
+                "BANK_CREATE",
+                "BANK_UPDATE",
+                "BANK_DELETE",
+                "CITY_VIEW",
+                "CITY_CREATE",
+                "CITY_UPDATE",
+                "CITY_DELETE"
         ));
 
         // AGENT

@@ -105,6 +105,10 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  cities: '/api/v1/city/get',
+  addCity: '/api/v1/city/add',
+  updateCityName: (id) => `/api/v1/city/update-name/${id}`,
+  deleteCity: (id) => `/api/v1/city/delete/${id}`,
   banks: '/api/v1/bank/get',
   bankById: (id) => `/api/v1/bank/get-bank-by-id/${id}`,
   addBank: '/api/v1/bank/add',

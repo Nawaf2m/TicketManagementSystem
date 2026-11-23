@@ -10,8 +10,9 @@ import DepartmentsPage from './pages/DepartmentsPage'
 import NotFoundPage from './pages/NotFoundPage'
 import RolesPage from './pages/RolesPage'
 import BanksPage from './pages/BanksPage'
+import CitiesPage from './pages/CitiesPage'
 import { EmptyState } from './components/UI'
-import { bankPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from './utils/permissions'
+import { bankPagePermissions, cityPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from './utils/permissions'
 
 function RequireAuth({ children }) {
   const { user } = useAuth()
@@ -43,6 +44,7 @@ export default function App() {
           }
         />
         <Route path="/roles" element={<RequirePermission anyOf={rolePagePermissions}><RolesPage /></RequirePermission>} />
+        <Route path="/cities" element={<RequirePermission anyOf={cityPagePermissions}><CitiesPage /></RequirePermission>} />
         <Route path="/banks" element={<RequirePermission anyOf={bankPagePermissions}><BanksPage /></RequirePermission>} />
       </Route>
       <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />

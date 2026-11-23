@@ -11,4 +11,6 @@ public interface CityRepository extends JpaRepository<City, Integer> {
     boolean existsByName(String name);
 
     City findCityByName(String name);
+
+    boolean existsByMerchantsIsNotEmptyAndId(Integer id);
 }
