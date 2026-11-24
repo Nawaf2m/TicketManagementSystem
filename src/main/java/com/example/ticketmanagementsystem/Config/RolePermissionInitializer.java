@@ -73,7 +73,11 @@ public class RolePermissionInitializer implements ApplicationRunner {
                 "CITY_VIEW",
                 "CITY_CREATE",
                 "CITY_UPDATE",
-                "CITY_DELETE"
+                "CITY_DELETE",
+                "MERCHANT_VIEW",
+                "MERCHANT_CREATE",
+                "MERCHANT_UPDATE",
+                "MERCHANT_DELETE"
         ));
 
         // AGENT

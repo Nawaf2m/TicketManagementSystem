@@ -15,3 +15,5 @@ export const userPagePermissions = ['USER_VIEW', 'USER_CREATE', 'USER_UPDATE', '
 export const ticketListPermissions = ['TICKET_VIEW_ALL', 'TICKET_VIEW_OWN', 'TICKET_VIEW_ASSIGNED']
 export const rolePagePermissions = ['ROLE_VIEW', 'ROLE_CREATE', 'ROLE_DELETE', 'ROLE_MANAGE_PERMISSIONS', 'PERMISSION_VIEW']
 export const permissionsUnavailableMessage = 'Your access permissions are currently unavailable. Protected actions are disabled. Please contact your administrator.'
+
+export const merchantPagePermissions = ['MERCHANT_VIEW', 'MERCHANT_CREATE', 'MERCHANT_UPDATE', 'MERCHANT_DELETE']
