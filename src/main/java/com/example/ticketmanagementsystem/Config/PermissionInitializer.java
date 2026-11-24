@@ -89,7 +89,13 @@ public class PermissionInitializer implements CommandLineRunner {
                 // Terminal
                 "TERMINAL_VIEW",
                 "TERMINAL_CREATE",
-                "TERMINAL_DELETE"
+                "TERMINAL_DELETE",
+
+                // Device
+                "DEVICE_VIEW",
+                "DEVICE_CREATE",
+                "DEVICE_UPDATE",
+                "DEVICE_DELETE"
         );
 
         for (String name : permissions) {

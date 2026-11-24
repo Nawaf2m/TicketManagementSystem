@@ -80,7 +80,11 @@ public class RolePermissionInitializer implements ApplicationRunner {
                 "MERCHANT_DELETE",
                 "TERMINAL_VIEW",
                 "TERMINAL_CREATE",
-                "TERMINAL_DELETE"
+                "TERMINAL_DELETE",
+                "DEVICE_VIEW",
+                "DEVICE_CREATE",
+                "DEVICE_UPDATE",
+                "DEVICE_DELETE"
         ));
 
         // AGENT

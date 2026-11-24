@@ -19,3 +19,4 @@ export const permissionsUnavailableMessage = 'Your access permissions are curren
 export const merchantPagePermissions = ['MERCHANT_VIEW', 'MERCHANT_CREATE', 'MERCHANT_UPDATE', 'MERCHANT_DELETE']
 
 export const terminalPagePermissions = ['TERMINAL_VIEW', 'TERMINAL_CREATE', 'TERMINAL_DELETE']
+export const devicePagePermissions = ['DEVICE_VIEW', 'DEVICE_CREATE', 'DEVICE_UPDATE', 'DEVICE_DELETE']
