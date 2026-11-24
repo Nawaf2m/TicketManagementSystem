@@ -105,6 +105,14 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  terminals: '/api/v1/terminal/get',
+  createTerminals: (bankId, quantity) => `/api/v1/terminal/create/${bankId}/${quantity}`,
+  terminalById: (id) => `/api/v1/terminal/get-terminal-by-id/${id}`,
+  terminalByNumber: (number) => `/api/v1/terminal/get-terminal-by-number/${encodeURIComponent(number)}`,
+  terminalByFullNumber: (number) => `/api/v1/terminal/get-terminal-by-full-number/${encodeURIComponent(number)}`,
+  terminalsByBank: (id) => `/api/v1/terminal/get-terminals-by-bank/${id}`,
+  terminalsByStatus: (status) => `/api/v1/terminal/get-terminals-by-status/${status}`,
+  deleteTerminal: (id) => `/api/v1/terminal/delete/${id}`,
   merchants: '/api/v1/merchant/get',
   addMerchant: '/api/v1/merchant/add',
   updateMerchantName: (id) => `/api/v1/merchant/update-name/${id}`,
