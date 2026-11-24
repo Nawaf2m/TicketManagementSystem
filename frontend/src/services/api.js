@@ -105,6 +105,12 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  devices: '/api/v1/device/get',
+  addDevice: '/api/v1/device/add',
+  deviceById: (id) => `/api/v1/device/get-device-by-id/${id}`,
+  deviceBySerialNumber: (serialNumber) => `/api/v1/device/get-device-by-serial-number/${encodeURIComponent(serialNumber)}`,
+  updateDevice: (id) => `/api/v1/device/update/${id}`,
+  deleteDevice: (id) => `/api/v1/device/delete/${id}`,
   terminals: '/api/v1/terminal/get',
   createTerminals: (bankId, quantity) => `/api/v1/terminal/create/${bankId}/${quantity}`,
   terminalById: (id) => `/api/v1/terminal/get-terminal-by-id/${id}`,

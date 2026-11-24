@@ -17,6 +17,8 @@ public interface TerminalRepository extends JpaRepository<Terminal, Integer> {
 
     boolean existsByFullTerminalNumber(String fullTerminalNumber);
 
+    boolean existsByDevice_Id(Integer deviceId);
+
     Terminal findTerminalByFullTerminalNumber(String fullTerminalNumber);
 
     List<Terminal> findTerminalsByBank(Bank bank);
