@@ -5,9 +5,11 @@ import { useAuth } from '../context/AuthContext'
 import { getName } from '../utils/data'
 import { Notice } from '../components/UI'
 import { devicePagePermissions } from '../utils/permissions'
+import { simCardPagePermissions } from '../utils/permissions'
 import { bankPagePermissions, cityPagePermissions, terminalPagePermissions, merchantPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from '../utils/permissions'
 
 const commonItems = [{ href: '/dashboard', icon: LayoutDashboard, title: 'Dashboard' }]
+const SimCardIcon = ({ size = 19 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><rect x="7" y="10" width="8" height="8" rx="1"/><path d="M11 10v8M7 14h8"/></svg>
 
 export default function AppLayout() {
   const { user, role, signOut, hasAnyPermission, permissionsAvailable } = useAuth()
@@ -22,6 +24,7 @@ export default function AppLayout() {
     ...(hasAnyPermission(...cityPagePermissions) ? [{ href: '/cities', icon: MapPin, title: 'City Management' }] : []),
     ...(hasAnyPermission(...terminalPagePermissions) ? [{ href: '/terminals', icon: CreditCard, title: 'Terminal Management' }] : []),
     ...(hasAnyPermission(...devicePagePermissions) ? [{ href: '/devices', icon: Cpu, title: 'Device Management' }] : []),
+    ...(hasAnyPermission(...simCardPagePermissions) ? [{ href: '/simcards', icon: SimCardIcon, title: 'SimCard Management' }] : []),
     ...(hasAnyPermission(...merchantPagePermissions) ? [{ href: '/merchants', icon: Store, title: 'Merchant Management' }] : []),
     ...(hasAnyPermission(...bankPagePermissions) ? [{ href: '/banks', icon: Landmark, title: 'Bank Management' }] : []),
     ...(hasAnyPermission(...userPagePermissions) ? [{ href: '/users', icon: Users, title: 'Users' }] : []),

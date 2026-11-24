@@ -105,6 +105,12 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  simCards: '/api/v1/simcard/get',
+  addSimCard: '/api/v1/simcard/add',
+  simCardById: (id) => `/api/v1/simcard/get-simcard-by-id/${id}`,
+  simCardBySerialNumber: (serialNumber) => `/api/v1/simcard/get-simcard-by-serial-number/${encodeURIComponent(serialNumber)}`,
+  updateSimCard: (id) => `/api/v1/simcard/update/${id}`,
+  deleteSimCard: (id) => `/api/v1/simcard/delete/${id}`,
   devices: '/api/v1/device/get',
   addDevice: '/api/v1/device/add',
   deviceById: (id) => `/api/v1/device/get-device-by-id/${id}`,

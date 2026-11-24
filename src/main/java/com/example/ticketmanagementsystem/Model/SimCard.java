@@ -16,7 +16,7 @@ public class SimCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "SimCard mode can't be empty.")
+    @NotEmpty(message = "SimCard model can't be empty.")
     @Length(max = 50, message = "SimCard model can't be more than 50 characters.")
     @Column(columnDefinition = "varchar(50)", nullable = false)
     private String model;

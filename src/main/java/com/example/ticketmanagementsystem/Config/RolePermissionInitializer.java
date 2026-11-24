@@ -84,7 +84,11 @@ public class RolePermissionInitializer implements ApplicationRunner {
                 "DEVICE_VIEW",
                 "DEVICE_CREATE",
                 "DEVICE_UPDATE",
-                "DEVICE_DELETE"
+                "DEVICE_DELETE",
+                "SIMCARD_VIEW",
+                "SIMCARD_CREATE",
+                "SIMCARD_UPDATE",
+                "SIMCARD_DELETE"
         ));
 
         // AGENT
