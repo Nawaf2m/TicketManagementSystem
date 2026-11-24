@@ -77,7 +77,10 @@ public class RolePermissionInitializer implements ApplicationRunner {
                 "MERCHANT_VIEW",
                 "MERCHANT_CREATE",
                 "MERCHANT_UPDATE",
-                "MERCHANT_DELETE"
+                "MERCHANT_DELETE",
+                "TERMINAL_VIEW",
+                "TERMINAL_CREATE",
+                "TERMINAL_DELETE"
         ));
 
         // AGENT

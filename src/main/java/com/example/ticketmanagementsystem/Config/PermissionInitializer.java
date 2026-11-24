@@ -84,7 +84,12 @@ public class PermissionInitializer implements CommandLineRunner {
                 "MERCHANT_VIEW",
                 "MERCHANT_CREATE",
                 "MERCHANT_UPDATE",
-                "MERCHANT_DELETE"
+                "MERCHANT_DELETE",
+
+                // Terminal
+                "TERMINAL_VIEW",
+                "TERMINAL_CREATE",
+                "TERMINAL_DELETE"
         );
 
         for (String name : permissions) {

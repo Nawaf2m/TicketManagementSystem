@@ -17,3 +17,5 @@ export const rolePagePermissions = ['ROLE_VIEW', 'ROLE_CREATE', 'ROLE_DELETE', '
 export const permissionsUnavailableMessage = 'Your access permissions are currently unavailable. Protected actions are disabled. Please contact your administrator.'
 
 export const merchantPagePermissions = ['MERCHANT_VIEW', 'MERCHANT_CREATE', 'MERCHANT_UPDATE', 'MERCHANT_DELETE']
+
+export const terminalPagePermissions = ['TERMINAL_VIEW', 'TERMINAL_CREATE', 'TERMINAL_DELETE']

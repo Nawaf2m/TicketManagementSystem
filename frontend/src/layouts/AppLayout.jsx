@@ -1,10 +1,10 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Building2, Store, Landmark, MapPin, LayoutDashboard, LogOut, Menu, Search, Shield, Ticket, Users, X } from 'lucide-react'
+import { Building2, Monitor, Store, Landmark, MapPin, LayoutDashboard, LogOut, Menu, Search, Shield, Ticket, Users, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { getName } from '../utils/data'
 import { Notice } from '../components/UI'
-import { bankPagePermissions, cityPagePermissions, merchantPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from '../utils/permissions'
+import { bankPagePermissions, cityPagePermissions, terminalPagePermissions, merchantPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from '../utils/permissions'
 
 const commonItems = [{ href: '/dashboard', icon: LayoutDashboard, title: 'Dashboard' }]
 
@@ -19,6 +19,7 @@ export default function AppLayout() {
     ...(canBrowseTickets ? [{ href: '/tickets', icon: Ticket, title: 'Tickets' }] : []),
     ...(hasAnyPermission(...departmentPagePermissions) ? [{ href: '/departments', icon: Building2, title: 'Departments' }] : []),
     ...(hasAnyPermission(...cityPagePermissions) ? [{ href: '/cities', icon: MapPin, title: 'City Management' }] : []),
+    ...(hasAnyPermission(...terminalPagePermissions) ? [{ href: '/terminals', icon: Monitor, title: 'Terminal Management' }] : []),
     ...(hasAnyPermission(...merchantPagePermissions) ? [{ href: '/merchants', icon: Store, title: 'Merchant Management' }] : []),
     ...(hasAnyPermission(...bankPagePermissions) ? [{ href: '/banks', icon: Landmark, title: 'Bank Management' }] : []),
     ...(hasAnyPermission(...userPagePermissions) ? [{ href: '/users', icon: Users, title: 'Users' }] : []),
@@ -29,7 +30,7 @@ export default function AppLayout() {
     <aside className={`sidebar ${mobileNav ? 'sidebar-open' : ''}`}>
       <div className="brand"><span className="brand-emblem"><i/><b/></span><div><strong>سند باي</strong><span>SANAD PAY</span></div><button className="mobile-close icon-button" onClick={() => setMobileNav(false)}><X size={18}/></button></div>
       <div className="nav-caption">WORKSPACE</div>
-      <nav className="side-nav">{navItems.map(({ href, icon: Icon, title }) => <NavLink key={href} to={href} onClick={() => setMobileNav(false)} className={({ isActive }) => `side-link ${isActive ? 'active' : ''}`}><Icon size={19}/><span>{title}</span></NavLink>)}</nav>
+      <nav className="side-nav" style={{ overflowY: 'auto', minHeight: 0 }}>{navItems.map(({ href, icon: Icon, title }) => <NavLink key={href} to={href} onClick={() => setMobileNav(false)} className={({ isActive }) => `side-link ${isActive ? 'active' : ''}`}><Icon size={19}/><span>{title}</span></NavLink>)}</nav>
       <div className="sidebar-bottom"><div className="sidebar-decoration"><i/><b/></div></div>
     </aside>
     {mobileNav && <div className="nav-overlay" onClick={() => setMobileNav(false)}/>}

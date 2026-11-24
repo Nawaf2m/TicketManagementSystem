@@ -12,8 +12,9 @@ import RolesPage from './pages/RolesPage'
 import BanksPage from './pages/BanksPage'
 import CitiesPage from './pages/CitiesPage'
 import MerchantsPage from './pages/MerchantsPage'
+import TerminalsPage from './pages/TerminalsPage'
 import { EmptyState } from './components/UI'
-import { bankPagePermissions, cityPagePermissions, merchantPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from './utils/permissions'
+import { bankPagePermissions, cityPagePermissions, terminalPagePermissions, merchantPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from './utils/permissions'
 
 function RequireAuth({ children }) {
   const { user } = useAuth()
@@ -46,6 +47,7 @@ export default function App() {
         />
         <Route path="/roles" element={<RequirePermission anyOf={rolePagePermissions}><RolesPage /></RequirePermission>} />
         <Route path="/cities" element={<RequirePermission anyOf={cityPagePermissions}><CitiesPage /></RequirePermission>} />
+        <Route path="/terminals" element={<RequirePermission anyOf={terminalPagePermissions}><TerminalsPage /></RequirePermission>} />
         <Route path="/merchants" element={<RequirePermission anyOf={merchantPagePermissions}><MerchantsPage /></RequirePermission>} />
         <Route path="/banks" element={<RequirePermission anyOf={bankPagePermissions}><BanksPage /></RequirePermission>} />
       </Route>
