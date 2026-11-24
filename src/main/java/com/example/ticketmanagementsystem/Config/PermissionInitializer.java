@@ -95,7 +95,13 @@ public class PermissionInitializer implements CommandLineRunner {
                 "DEVICE_VIEW",
                 "DEVICE_CREATE",
                 "DEVICE_UPDATE",
-                "DEVICE_DELETE"
+                "DEVICE_DELETE",
+
+                // SimCard
+                "SIMCARD_VIEW",
+                "SIMCARD_CREATE",
+                "SIMCARD_UPDATE",
+                "SIMCARD_DELETE"
         );
 
         for (String name : permissions) {

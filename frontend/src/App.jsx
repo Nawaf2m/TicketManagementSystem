@@ -14,6 +14,8 @@ import CitiesPage from './pages/CitiesPage'
 import MerchantsPage from './pages/MerchantsPage'
 import TerminalsPage from './pages/TerminalsPage'
 import DevicesPage from './pages/DevicesPage'
+import SimCardsPage from './pages/SimCardsPage'
+import { simCardPagePermissions } from './utils/permissions'
 import { devicePagePermissions } from './utils/permissions'
 import { EmptyState } from './components/UI'
 import { bankPagePermissions, cityPagePermissions, terminalPagePermissions, merchantPagePermissions, departmentPagePermissions, permissionsUnavailableMessage, rolePagePermissions, ticketListPermissions, userPagePermissions } from './utils/permissions'
@@ -51,6 +53,7 @@ export default function App() {
         <Route path="/cities" element={<RequirePermission anyOf={cityPagePermissions}><CitiesPage /></RequirePermission>} />
         <Route path="/terminals" element={<RequirePermission anyOf={terminalPagePermissions}><TerminalsPage /></RequirePermission>} />
         <Route path="/devices" element={<RequirePermission anyOf={devicePagePermissions}><DevicesPage /></RequirePermission>} />
+        <Route path="/simcards" element={<RequirePermission anyOf={simCardPagePermissions}><SimCardsPage /></RequirePermission>} />
         <Route path="/merchants" element={<RequirePermission anyOf={merchantPagePermissions}><MerchantsPage /></RequirePermission>} />
         <Route path="/banks" element={<RequirePermission anyOf={bankPagePermissions}><BanksPage /></RequirePermission>} />
       </Route>

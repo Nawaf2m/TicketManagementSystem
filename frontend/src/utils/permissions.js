@@ -20,3 +20,4 @@ export const merchantPagePermissions = ['MERCHANT_VIEW', 'MERCHANT_CREATE', 'MER
 
 export const terminalPagePermissions = ['TERMINAL_VIEW', 'TERMINAL_CREATE', 'TERMINAL_DELETE']
 export const devicePagePermissions = ['DEVICE_VIEW', 'DEVICE_CREATE', 'DEVICE_UPDATE', 'DEVICE_DELETE']
+export const simCardPagePermissions = ['SIMCARD_VIEW', 'SIMCARD_CREATE', 'SIMCARD_UPDATE', 'SIMCARD_DELETE']
