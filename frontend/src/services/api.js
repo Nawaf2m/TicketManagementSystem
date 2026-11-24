@@ -105,6 +105,12 @@ export async function getList(url, config) {
 }
 
 export const paths = {
+  merchants: '/api/v1/merchant/get',
+  addMerchant: '/api/v1/merchant/add',
+  updateMerchantName: (id) => `/api/v1/merchant/update-name/${id}`,
+  addMerchantCity: (merchantId, cityId) => `/api/v1/merchant/add-city/${merchantId}/${cityId}`,
+  removeMerchantCity: (merchantId, cityId) => `/api/v1/merchant/remove-city/${merchantId}/${cityId}`,
+  deleteMerchant: (id) => `/api/v1/merchant/delete/${id}`,
   cities: '/api/v1/city/get',
   addCity: '/api/v1/city/add',
   updateCityName: (id) => `/api/v1/city/update-name/${id}`,
